@@ -1,0 +1,31 @@
+{
+  "description": "Vendor-shaped FMP stable income-statement payload for mapper tests. Not a live recording: no FMP_API_KEY was available. Figures are placeholders. Re-record with npm run record.",
+  "recorded": false,
+  "input": {
+    "symbol": "aapl",
+    "period": "annual",
+    "limit": 1
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://financialmodelingprep.com/stable/income-statement?symbol=AAPL&period=annual&limit=1"
+  },
+  "status": 200,
+  "body": [
+    {
+      "date": "2024-09-28",
+      "symbol": "AAPL",
+      "reportedCurrency": "USD",
+      "cik": "0000320193",
+      "fiscalYear": "2024",
+      "period": "FY",
+      "revenue": 100,
+      "grossProfit": 40,
+      "operatingIncome": 30,
+      "netIncome": 20,
+      "eps": 1.5,
+      "epsDiluted": 1.4,
+      "ebitda": 35
+    }
+  ]
+}

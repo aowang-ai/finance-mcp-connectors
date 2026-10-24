@@ -1,0 +1,17 @@
+{
+  "description": "Recorded 2026-10-22 from OKX for an unknown instId.",
+  "recorded": true,
+  "input": {
+    "instId": "NOT-A-PAIR"
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://www.okx.com/api/v5/market/ticker?instId=NOT-A-PAIR"
+  },
+  "status": 200,
+  "body": {
+    "code": "51001",
+    "data": [],
+    "msg": "Instrument ID, Instrument ID code, or Spread ID doesn't exist."
+  }
+}

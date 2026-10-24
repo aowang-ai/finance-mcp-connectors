@@ -1,0 +1,36 @@
+{
+  "description": "Recorded 2026-10-22 from OKX public ticker for BTC-USDT. One instrument, untrimmed.",
+  "recorded": true,
+  "input": {
+    "instId": "BTC-USDT"
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://www.okx.com/api/v5/market/ticker?instId=BTC-USDT"
+  },
+  "status": 200,
+  "body": {
+    "code": "0",
+    "data": [
+      {
+        "instType": "SPOT",
+        "instId": "BTC-USDT",
+        "last": "81406.4",
+        "lastSz": "0.0006142",
+        "askPx": "81406.4",
+        "askSz": "1.99024983",
+        "bidPx": "81406.3",
+        "bidSz": "0.78364077",
+        "open24h": "83781.1",
+        "high24h": "84899.6",
+        "low24h": "81377.1",
+        "volCcy24h": "621293544.363244111",
+        "vol24h": "7453.37565751",
+        "ts": "1792677197270",
+        "sodUtc0": "84097.6",
+        "sodUtc8": "84539.5"
+      }
+    ],
+    "msg": ""
+  }
+}

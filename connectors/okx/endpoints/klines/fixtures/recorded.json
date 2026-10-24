@@ -1,0 +1,42 @@
+{
+  "description": "Recorded 2026-10-22 from OKX public candles, BTC-USDT 1H, trimmed to 2 bars.",
+  "recorded": true,
+  "input": {
+    "instId": "BTC-USDT",
+    "bar": "1H",
+    "limit": 2
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://www.okx.com/api/v5/market/candles?instId=BTC-USDT&bar=1H&limit=2"
+  },
+  "status": 200,
+  "body": {
+    "code": "0",
+    "data": [
+      [
+        "1792674000000",
+        "81693.5",
+        "82095.2",
+        "81377.1",
+        "81406.4",
+        "371.04486284",
+        "30305293.863595945",
+        "30305293.863595945",
+        "0"
+      ],
+      [
+        "1792670400000",
+        "81754",
+        "81908.2",
+        "81633.9",
+        "81693.9",
+        "128.41640426",
+        "10499994.406052734",
+        "10499994.406052734",
+        "1"
+      ]
+    ],
+    "msg": ""
+  }
+}

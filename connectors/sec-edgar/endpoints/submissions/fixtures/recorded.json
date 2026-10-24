@@ -1,0 +1,39 @@
+{
+  "description": "Recorded 2026-10-22 from SEC data.sec.gov submissions for Apple CIK 0000320193. Addresses, phone, EIN, and all but 4 recent filings removed.",
+  "recorded": true,
+  "input": {
+    "cik": "0000320193",
+    "limit": 2
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://data.sec.gov/submissions/CIK0000320193.json"
+  },
+  "status": 200,
+  "body": {
+    "cik": "0000320193",
+    "name": "Apple Inc.",
+    "tickers": ["AAPL"],
+    "exchanges": ["Nasdaq"],
+    "filings": {
+      "recent": {
+        "accessionNumber": [
+          "0001140361-26-040127",
+          "0001140361-26-040126",
+          "0001950047-26-010286",
+          "0001140361-26-039785"
+        ],
+        "filingDate": ["2026-10-19", "2026-10-19", "2026-10-16", "2026-10-15"],
+        "reportDate": ["2026-10-15", "2026-10-15", "", "2026-10-13"],
+        "form": ["4", "4", "144", "4"],
+        "primaryDocument": [
+          "xslF345X06/form4.xml",
+          "xslF345X06/form4.xml",
+          "xsl144X01/primary_doc.xml",
+          "xslF345X06/form4.xml"
+        ],
+        "primaryDocDescription": ["FORM 4", "FORM 4", "", "FORM 4"]
+      }
+    }
+  }
+}

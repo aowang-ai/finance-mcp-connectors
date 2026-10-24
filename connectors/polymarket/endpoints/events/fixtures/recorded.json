@@ -1,0 +1,41 @@
+{
+  "description": "Recorded 2026-10-22 from Polymarket Gamma events, tag_slug=fed, limit=1. Descriptions and images removed; markets trimmed to 2.",
+  "recorded": true,
+  "input": {
+    "tag": "Fed",
+    "limit": 1
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://gamma-api.polymarket.com/events?limit=1&active=true&closed=false&tag_slug=fed"
+  },
+  "status": 200,
+  "body": [
+    {
+      "id": "51456",
+      "title": "How many Fed rate cuts in 2026?",
+      "slug": "how-many-fed-rate-cuts-in-2026",
+      "endDate": "2027-01-01T04:59:00Z",
+      "volume": 54676347.13096599,
+      "liquidity": 3702097.00685,
+      "markets": [
+        {
+          "id": "616902",
+          "question": "Will no Fed rate cuts happen in 2026?",
+          "slug": "will-no-fed-rate-cuts-happen-in-2026",
+          "outcomes": "[\"Yes\", \"No\"]",
+          "outcomePrices": "[\"0.9665\", \"0.0335\"]",
+          "volume": "9012932.455820998"
+        },
+        {
+          "id": "616903",
+          "question": "Will 1 Fed rate cut happen in 2026?",
+          "slug": "will-1-fed-rate-cut-happen-in-2026",
+          "outcomes": "[\"Yes\", \"No\"]",
+          "outcomePrices": "[\"0.0065\", \"0.9935\"]",
+          "volume": "3603239.029738"
+        }
+      ]
+    }
+  ]
+}

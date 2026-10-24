@@ -1,0 +1,48 @@
+{
+  "description": "Recorded 2026-10-22 from Deribit public get_instruments, BTC options. Trimmed to 3 instruments and the fields this connector reads.",
+  "recorded": true,
+  "input": {
+    "currency": "BTC",
+    "limit": 2
+  },
+  "request": {
+    "method": "GET",
+    "url": "https://www.deribit.com/api/v2/public/get_instruments?currency=BTC&kind=option&expired=false"
+  },
+  "status": 200,
+  "body": {
+    "jsonrpc": "2.0",
+    "result": [
+      {
+        "instrument_name": "BTC-23OCT26-70000-C",
+        "strike": 70000.0,
+        "expiration_timestamp": 1792742400000,
+        "option_type": "call",
+        "settlement_period": "week",
+        "kind": "option",
+        "base_currency": "BTC",
+        "quote_currency": "BTC"
+      },
+      {
+        "instrument_name": "BTC-23OCT26-70000-P",
+        "strike": 70000.0,
+        "expiration_timestamp": 1792742400000,
+        "option_type": "put",
+        "settlement_period": "week",
+        "kind": "option",
+        "base_currency": "BTC",
+        "quote_currency": "BTC"
+      },
+      {
+        "instrument_name": "BTC-23OCT26-73000-C",
+        "strike": 73000.0,
+        "expiration_timestamp": 1792742400000,
+        "option_type": "call",
+        "settlement_period": "week",
+        "kind": "option",
+        "base_currency": "BTC",
+        "quote_currency": "BTC"
+      }
+    ]
+  }
+}
