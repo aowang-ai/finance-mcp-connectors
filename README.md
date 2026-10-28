@@ -36,7 +36,7 @@ Sign in when the client asks. Other clients are in the docs.
 
 ## How an agent uses it
 
-Three verbs. Discover, inspect, and run are free.
+Three verbs. Finance MCP never charges money: each account gets 1,000 free credits once, shared by all of its API keys and OAuth sessions. Discover and inspect are free; each successful run costs 1 credit (FMP tools 2), and failed runs are not charged. See https://finance-mcp.com/pricing.
 
 1. `finance_discover`: describe the task. `{ "query": "BTC spot price", "limit": 5 }` returns ranked `{ id, provider, displayName, summary }`.
 2. `finance_inspect`: read one tool. `{ "id": "okx#ticker" }` returns its input schema and output shape.
