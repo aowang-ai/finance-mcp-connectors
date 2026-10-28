@@ -24,6 +24,8 @@ Trim anything the mapper does not need, and drop contact fields, before committi
 9. Run `npm test` and `npm run lint`.
 10. Open a pull request.
 
+A tool that needs several upstream calls is a composite: write `execute(input, { secrets })` with `defineEndpoint` from `src/core/composite.ts`, wrap it with `composite()` in `index.ts`, and record its fixture with `npm run record:composite -- <provider>#<endpoint>`. Use `runtimeFetch` for network calls so replays stay offline. See [connectors/macro](connectors/macro).
+
 Auth is one of `none`, `query` (`env` + `param`), or `header` (`env` + `header`, optional `defaultValue`). The key stays in the environment. Do not commit keys or recorded payloads that still contain them.
 
 `npm test` replays fixtures and checks that each example call matches its fixture. CI runs that plus lint. A connector that needs a live key to pass tests is not ready.

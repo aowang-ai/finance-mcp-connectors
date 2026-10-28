@@ -58,12 +58,14 @@ export function inspect(endpoint: Endpoint): Record<string, unknown> {
     tags: endpoint.meta.tags,
     docsUrl: endpoint.meta.docsUrl,
     authEnv: authEnv(endpoint),
+    ...(endpoint.envs ? { envs: endpoint.envs } : {}),
     inputSchema: z.toJSONSchema(endpoint.input),
     outputShape: endpoint.outputShape,
   };
 }
 
 function authEnv(endpoint: Endpoint): string | null {
+  if (endpoint.envs) return endpoint.envs.required[0] ?? null;
   const auth = endpoint.provider.auth;
   if (auth.kind === "none") return null;
   if (auth.kind === "header" && auth.defaultValue) return null;

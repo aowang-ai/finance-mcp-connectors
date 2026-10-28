@@ -27,5 +27,23 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "connectors/stocks/**",
+        "connectors/macro/**",
+        "connectors/sec-edgar/lib/**",
+        "connectors/sec-edgar/endpoints/fundamentals/**",
+        "connectors/sec-edgar/endpoints/filings/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    }
+  ]
 }

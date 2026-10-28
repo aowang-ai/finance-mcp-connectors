@@ -14,10 +14,16 @@ test("ids are unique and use provider#endpoint", () => {
     "deribit#options",
     "fmp#income-statement",
     "fred#observations",
+    "macro#overview",
     "okx#klines",
     "okx#ticker",
     "polymarket#events",
+    "sec-edgar#filings",
+    "sec-edgar#fundamentals",
     "sec-edgar#submissions",
+    "stocks#news",
+    "stocks#price-history",
+    "stocks#snapshot",
   ]);
 });
 
@@ -25,7 +31,8 @@ test("discover ranks the catalog examples", () => {
   assert.equal(top("BTC spot price"), "okx#ticker");
   assert.equal(top("OHLCV candlesticks"), "okx#klines");
   assert.equal(top("BTC option chain"), "deribit#options");
-  assert.equal(top("10-K filings"), "sec-edgar#submissions");
+  assert.equal(top("10-K filings"), "sec-edgar#filings");
+  assert.equal(top("CIK submissions index"), "sec-edgar#submissions");
   assert.equal(top("AAPL income statement"), "fmp#income-statement");
   assert.equal(top("DGS10 10y yield"), "fred#observations");
   assert.equal(top("Fed prediction markets"), "polymarket#events");

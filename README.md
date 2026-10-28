@@ -38,11 +38,19 @@ Sign in when the client asks. Other clients are in the docs.
 
 Three verbs. Discover, inspect, and run are free.
 
-1. `finance_discover` — describe the task. `{ "query": "BTC spot price", "limit": 5 }` returns ranked `{ id, provider, displayName, summary }`.
-2. `finance_inspect` — read one tool. `{ "id": "okx#ticker" }` returns its input schema and output shape.
-3. `finance_run` — call it. `{ "id": "okx#ticker", "params": { "instId": "BTC-USDT" } }`. A failed vendor call returns an error.
+1. `finance_discover`: describe the task. `{ "query": "BTC spot price", "limit": 5 }` returns ranked `{ id, provider, displayName, summary }`.
+2. `finance_inspect`: read one tool. `{ "id": "okx#ticker" }` returns its input schema and output shape.
+3. `finance_run`: call it. `{ "id": "okx#ticker", "params": { "instId": "BTC-USDT" } }`. A failed vendor call returns an error.
+
+Stock tools take the ticker directly. For "where is this stock now", start with `stocks#snapshot`.
 
 ```json
+{ "id": "stocks#snapshot", "params": { "ticker": "SNDK" } }
+{ "id": "stocks#price-history", "params": { "ticker": "MU", "range": "1y", "interval": "daily", "indicators": true } }
+{ "id": "stocks#news", "params": { "ticker": "SNDK", "days": 7, "limit": 10 } }
+{ "id": "macro#overview", "params": {} }
+{ "id": "sec-edgar#fundamentals", "params": { "ticker": "SNDK", "period": "quarterly", "limit": 4 } }
+{ "id": "sec-edgar#filings", "params": { "ticker": "MU", "forms": ["10-K", "10-Q", "8-K", "4"], "limit": 10 } }
 { "id": "fmp#income-statement", "params": { "symbol": "AAPL", "period": "annual", "limit": 3 } }
 { "id": "fred#observations", "params": { "seriesId": "DGS10", "limit": 12 } }
 { "id": "sec-edgar#submissions", "params": { "cik": "0000320193" } }
@@ -54,12 +62,16 @@ Three verbs. Discover, inspect, and run are free.
 
 | Source | Upstream | Auth | Endpoints |
 | --- | --- | --- | --- |
-| SEC EDGAR | [submissions API](https://www.sec.gov/search-filings/edgar-application-programming-interfaces) | `SEC_EDGAR_USER_AGENT`, or the default contact string | `sec-edgar#submissions` |
+| US stocks | Tiingo, Twelve Data, SEC XBRL, [Finnhub](https://finnhub.io/docs/api) | `TIINGO_API_KEY`, `FINNHUB_API_KEY`, optional `TWELVE_DATA_API_KEY` | `stocks#snapshot`, `stocks#price-history`, `stocks#news` |
+| US macro | [FRED](https://fred.stlouisfed.org/docs/api/fred/series_observations.html) | `FRED_API_KEY` | `macro#overview` |
+| SEC EDGAR | [EDGAR APIs](https://www.sec.gov/search-filings/edgar-application-programming-interfaces) | `SEC_EDGAR_USER_AGENT`, or the default contact string | `sec-edgar#fundamentals`, `sec-edgar#filings`, `sec-edgar#submissions` |
 | FRED | [series observations](https://fred.stlouisfed.org/docs/api/fred/series_observations.html) | `FRED_API_KEY` | `fred#observations` |
 | Polymarket | [Gamma events](https://docs.polymarket.com/developers/gamma-markets-api/get-events) | none | `polymarket#events` |
 | Deribit | [get_instruments](https://docs.deribit.com/#public-get_instruments) | none | `deribit#options` |
 | OKX | [market data](https://www.okx.com/docs-v5/en/#order-book-trading-market-data) | none | `okx#ticker`, `okx#klines` |
 | FMP | [income statement](https://site.financialmodelingprep.com/developer/docs) | `FMP_API_KEY` | `fmp#income-statement` |
+
+Stock prices are delayed or IEX only. Finnhub parts of the snapshot are optional and show up as notes when the free tier does not cover them.
 
 ## Writing a connector
 
@@ -125,6 +137,8 @@ connectors/<name>/
     ├── endpoint.test.ts
     └── fixtures/*.json
 ```
+
+Composite tools, the ones that combine several upstream calls (`stocks#*`, `macro#overview`, `sec-edgar#fundamentals`, `sec-edgar#filings`), declare an `execute` function and are wrapped with `composite()` in the connector's `index.ts`. Their fixture records every upstream response of one run; `npm run record:composite -- <provider>#<endpoint>` writes it with keys removed.
 
 1. Read [`connectors/okx`](connectors/okx) and [`connectors/fred`](connectors/fred), and [CONTRIBUTING.md](CONTRIBUTING.md).
 2. Write the provider and the endpoint.

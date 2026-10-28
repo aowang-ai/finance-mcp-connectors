@@ -51,6 +51,13 @@ export type Endpoint = {
   example: EndpointExample;
   buildRequest: (input: Record<string, unknown>) => RequestParts;
   parse: (body: unknown, input: Record<string, unknown>) => unknown;
+  /**
+   * Composite tools make several upstream calls. When set, execute() calls run()
+   * instead of the single request; example.request is the primary call.
+   */
+  run?: (input: Record<string, unknown>, ctx: { env: Env }) => Promise<unknown>;
+  /** Env vars a composite reads. Missing optional ones degrade to notes. */
+  envs?: { required: string[]; optional: string[] };
 };
 
 export type Env = Record<string, string | undefined>;

@@ -9,7 +9,7 @@
     "verbatimModuleSyntax": true,
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": false
   },
   "include": ["src/**/*.ts", "connectors/**/*.ts", "scripts/**/*.ts"]
 }

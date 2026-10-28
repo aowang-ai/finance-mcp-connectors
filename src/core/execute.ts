@@ -1,3 +1,4 @@
+import { withFetch } from "./composite.js";
 import type { Endpoint, Env, RequestParts, RunResult } from "./types.js";
 
 const DEFAULT_USER_AGENT = "finance-mcp-connectors/0.1";
@@ -9,7 +10,7 @@ export type ExecuteOptions = {
 };
 
 export function redactSecrets(value: string): string {
-  return value.replace(/([?&](?:api_key|apikey)=)[^&\s]+/gi, "$1***");
+  return value.replace(/([?&](?:api_key|apikey|token)=)[^&\s]+/gi, "$1***");
 }
 
 function envOf(options: ExecuteOptions | undefined): Env {
@@ -72,6 +73,7 @@ export async function execute(
   params: unknown,
   options?: ExecuteOptions,
 ): Promise<RunResult> {
+  if (endpoint.run) return runComposite(endpoint, params, options);
   const prepared = prepareRequest(endpoint, params, envOf(options));
   if (!prepared.ok) {
     return { ok: false, id: endpoint.id, error: { message: prepared.message } };
@@ -109,5 +111,38 @@ export async function execute(
   } catch (error) {
     const message = error instanceof Error ? error.message : "Response did not match the connector";
     return { ok: false, id: endpoint.id, error: { message: redactSecrets(message) } };
+  }
+}
+
+async function runComposite(
+  endpoint: Endpoint,
+  params: unknown,
+  options?: ExecuteOptions,
+): Promise<RunResult> {
+  const parsed = endpoint.input.safeParse(params ?? {});
+  if (!parsed.success) {
+    const message = parsed.error.issues.map((issue) => issue.message).join("; ");
+    return { ok: false, id: endpoint.id, error: { message } };
+  }
+  const env = envOf(options);
+  const missing = (endpoint.envs?.required ?? []).filter((name) => !env[name]);
+  if (missing.length > 0) {
+    return { ok: false, id: endpoint.id, error: { message: `${missing.join(", ")} is not set` } };
+  }
+  const run = endpoint.run;
+  if (!run) return { ok: false, id: endpoint.id, error: { message: "not a composite" } };
+  try {
+    const output = await withFetch(options?.fetch ?? fetch, () =>
+      run(parsed.data as Record<string, unknown>, { env }),
+    );
+    return { ok: true, id: endpoint.id, output };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Composite run failed";
+    const status = (error as { status?: number }).status;
+    return {
+      ok: false,
+      id: endpoint.id,
+      error: { message: redactSecrets(message), ...(status ? { status } : {}) },
+    };
   }
 }
