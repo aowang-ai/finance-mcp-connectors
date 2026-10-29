@@ -10,13 +10,14 @@ import {
 import provider from "../../provider.js";
 
 const input = z.object({
-  tag: z.string().min(1).describe("Tag or topic, for example Fed."),
+  query: z
+    .string()
+    .min(1)
+    .describe("Keyword matched against event titles and tags, for example SpaceX or Fed."),
   limit: z.number().int().min(1).max(25).default(10).describe("Maximum events. Default 10."),
 });
 
-function tagSlug(tag: string): string {
-  return tag.trim().toLowerCase().replace(/\s+/g, "-");
-}
+const num = (value: number | null) => value ?? 0;
 
 export default defineEndpoint({
   provider,
@@ -24,18 +25,18 @@ export default defineEndpoint({
   meta: {
     displayName: "Polymarket events",
     summary:
-      "Search prediction markets by keyword; returns implied probabilities, volume, liquidity.",
+      "Search prediction markets by keyword; open events only, highest volume first, with implied probabilities, volume, liquidity.",
     description:
-      "Active Polymarket events for a tag such as Fed. Each market includes outcome labels and implied prices. Prices are the strings Gamma returns, between 0 and 1 when the market is quoted that way.",
+      "Open Polymarket events matching a keyword such as SpaceX or Fed, from Gamma public search, sorted by volume. Each market includes outcome labels and implied prices. Prices are the strings Gamma returns, between 0 and 1 when the market is quoted that way.",
     tags: ["prediction", "sentiment", "macro", "politics"],
-    docsUrl: "https://docs.polymarket.com/developers/gamma-markets-api/get-events",
+    docsUrl: "https://docs.polymarket.com/developers/gamma-markets-api/search",
   },
   input,
   outputShape: {
     type: "object",
-    required: ["tag", "events"],
+    required: ["query", "events"],
     properties: {
-      tag: { type: "string" },
+      query: { type: "string" },
       events: {
         type: "array",
         items: {
@@ -66,24 +67,31 @@ export default defineEndpoint({
     },
   },
   example: {
-    params: { tag: "Fed", limit: 1 },
+    params: { query: "SpaceX", limit: 2 },
     request: {
       method: "GET",
-      url: "https://gamma-api.polymarket.com/events?limit=1&active=true&closed=false&tag_slug=fed",
+      url: "https://gamma-api.polymarket.com/public-search?q=SpaceX&limit_per_type=50&search_tags=true&search_profiles=false&events_status=active&keep_closed_markets=0",
     },
     fixture: "recorded.json",
   },
-  buildRequest: ({ tag, limit }) => ({
+  buildRequest: ({ query }) => ({
     method: "GET",
-    url: endpointUrl("https://gamma-api.polymarket.com/events", {
-      limit,
-      active: "true",
-      closed: "false",
-      tag_slug: tagSlug(tag),
+    url: endpointUrl("https://gamma-api.polymarket.com/public-search", {
+      q: query,
+      limit_per_type: 50,
+      search_tags: "true",
+      search_profiles: "false",
+      events_status: "active",
+      keep_closed_markets: 0,
     }),
   }),
-  parse: (body, { tag }) => {
-    const events = asArray(body, "polymarket events").map((item) => {
+  parse: (body, { query, limit }) => {
+    const rows = asArray(asRecord(body, "polymarket search").events ?? [], "polymarket events");
+    const open = rows.filter((item) => {
+      const e = asRecord(item, "polymarket event");
+      return e.closed !== true && e.active !== false;
+    });
+    const events = open.map((item) => {
       const event = asRecord(item, "polymarket event");
       const markets = asArray(event.markets ?? [], "polymarket markets").map((market) => {
         const row = asRecord(market, "polymarket market");
@@ -103,6 +111,7 @@ export default defineEndpoint({
         markets,
       };
     });
-    return { tag, events };
+    events.sort((a, b) => num(b.volume) - num(a.volume));
+    return { query, events: events.slice(0, limit) };
   },
 });
