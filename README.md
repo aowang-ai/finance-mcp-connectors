@@ -55,7 +55,7 @@ Stock tools take the ticker directly. For "where is this stock now", start with 
 { "id": "fred#observations", "params": { "seriesId": "DGS10", "limit": 12 } }
 { "id": "sec-edgar#submissions", "params": { "cik": "0000320193" } }
 { "id": "deribit#options", "params": { "currency": "BTC" } }
-{ "id": "polymarket#events", "params": { "tag": "Fed" } }
+{ "id": "polymarket#events", "params": { "query": "SpaceX" } }
 ```
 
 ## Sources
